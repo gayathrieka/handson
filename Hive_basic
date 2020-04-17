@@ -1,0 +1,184 @@
+To enter into Hive Shell
+-------------------------
+hive
+
+
+To use shell commands inside hive
+---------------------------------
+!ls;
+
+!ls directoryname;
+Ex: !ls /home/dbtrain;
+
+
+To lists all the tables:
+------------------------
+show tables;
+
+To show a database:
+-----------------
+show databases;
+
+To create database
+-------------------
+
+create database <<urname>>
+
+To create tables in it:
+--------------------------
+use databasename;
+
+Ex: use amol;
+
+
+To execute hql file from hadoop shell
+-------------------------------------
+save the query in .hql file and execute below command 
+
+hive -f filename.hql
+
+
+
+----------------------------
+General Table and HDFS File
+------------------------------
+
+1.
+Hive> CREATE TABLE posts (user STRING, post STRING, time BIGINT)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+STORED AS TEXTFILE;
+
+! hadoop fs -ls /user/hive/warehouse;
+! hadoop fs -ls /user/hive/warehouse/posts;
+
+2.
+Hive> show tables;
+
+
+3.
+Hive> describe posts;
+
+
+4.
+hadoop fs -put /home/dbtrain/<<yourname>>/posts.txt /user/dbtrain/<<urname>>/posts.txt
+! hadoop fs -ls /user/dbtrain/<<urname>>/;
+
+Hive> LOAD DATA INPATH '/user/dbtrain/<<urname>>/posts.txt'
+OVERWRITE INTO TABLE posts;
+
+
+! hadoop fs - ls /hive/warehouse/posts;
+
+
+5.
+Hive> select * from posts;
+
+
+6.
+Hive> drop table posts;
+Hive> Show tables;
+
+check this if posts exist
+
+!hadoop fs -ls /user/hive/warehouse/
+
+--------------------------------------------------------
+
+7.
+Function commands:
+---------------------
+show functions;
+
+Gives short description of function:
+-----------------------------------
+describe function <functionname>;
+Ex: describe function upper;
+
+
+Gives full description of function:
+-----------------------------------
+describe function extended <functionname>;
+Ex: describe function extended upper;
+
+Gives full description of table:
+-----------------------------------
+describe extended <<tablename>>;
+
+----------
+Inner Join - with Script
+-----------
+8.
+
+
+CREATE EXTERNAL TABLE likes (user STRING, liker INT, time BIGINT)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+STORED AS TEXTFILE;
+
+
+LOAD DATA LOCAL INPATH '/home/dbtrain/<<urname>>/likes.txt'
+OVERWRITE INTO TABLE likes;
+
+
+
+CREATE EXTERNAL TABLE posts (user STRING, post STRING, time BIGINT)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+STORED AS TEXTFILE;
+
+LOAD DATA LOCAL INPATH '/home/dbtrain/<<urname>>/likes.txt'
+OVERWRITE INTO TABLE posts;
+
+
+
+CREATE TABLE posts_likes (user STRING, post STRING, likes_count INT);
+
+
+INSERT OVERWRITE TABLE posts_likes
+SELECT p.user, p.post, l.liker
+FROM posts p JOIN likes l ON (p.user = l.user);
+
+
+select * from posts_likes;
+
+
+Execute the above as a script
+hive -f hive_createjoin.hql
+
+
+9.
+
+To find if a table is external/internal
+---------------------------------------
+describe formatted posts_likes;
+describe formatted posts;
+
+For detailed information,
+
+describe extended posts_likes;
+describe extended posts;
+
+
+--------------
+Outer Join
+--------------
+
+10.
+
+SELECT p.*, l.*
+FROM posts p LEFT OUTER JOIN likes l ON (p.user = l.user);
+
+
+
+11.
+SELECT p.*, l.*
+FROM posts p RIGHT OUTER JOIN likes l ON (p.user = l.user);
+
+
+12.
+SELECT p.*, l.*
+FROM posts p FULL OUTER JOIN likes l ON (p.user = l.user);
+
+
+
