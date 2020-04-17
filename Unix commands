@@ -5,7 +5,17 @@ ls
 
 To create a directory
 ------------------------
-mkdir input
+mkdir <<yourname>>
+
+To change the directory
+------------------------
+
+cd <<<yourname>>
+
+To write to a file:
+--------------------
+
+cat >> a.txt
 
 
 To see the content of a file
@@ -23,11 +33,13 @@ To exit
 exit
 
 
-VI Editor
+You can write file using VI Editor
 ----------
 vi editor posts.txt
 
 type somethings by pressing i in the keyboard
+
+Press esc and type as below using :
 
 :w - save the file
 :q - quit
