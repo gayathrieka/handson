@@ -1,0 +1,31 @@
+D. Create a bucket table:
+-------------------------
+1.
+DROP TABLE bucktbl;
+
+CREATE TABLE bucktbl(tweetId BIGINT, username STRING,txt STRING,CreatedAt STRING,favc BIGINT,retweet STRING,retcount BIGINT, followerscount BIGINT)
+PARTITIONED BY( profileLocation STRING)
+CLUSTERED BY(tweetId) INTO 2 BUCKETS
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY '\t'
+STORED AS TEXTFILE;
+
+2.
+set hive.enforce.bucketing = true; 
+INSERT OVERWRITE TABLE bucktbl PARTITION (profileLocation="Chicago")    
+SELECT tweetId,username,txt,CreatedAt,favc,retweet,retcount,followerscount       
+FROM twittble
+where profileLocation like '%Chicago%';
+
+3.
+SELECT * FROM bucktbl;
+
+! hadoop fs -ls /user/hive/warehouse/bucktbl;
+! hadoop fs -ls /user/hive/warehouse/bucktbl/profilelocation=Chicago;
+! hadoop fs -cat /user/hive/warehouse/bucktbl/profilelocation=Chicago/000000_0;
+! hadoop fs -cat /user/hive/warehouse/bucktbl/profilelocation=Chicago/000001_0;
+
+
+describe formatted twitpart;
+describe formatted bucktbl;
+describe extended bucktbl;
