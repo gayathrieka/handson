@@ -38,21 +38,3 @@ SELECT * FROM twitorctbl;
 ! hadoop fs -tail /user/hive/warehouse/twitorctbl/000000_0;
 
 
-C. Create a Avro Table:
-------------------------
-1.
-CREATE TABLE twitavrotbl
-ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.avro.AvroSerDe'
-STORED as INPUTFORMAT 'org.apache.hadoop.hive.ql.io.avro.AvroContainerInputFormat'
-OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.avro.AvroContainerOutputFormat'
-TBLPROPERTIES ('avro.schema.url'='hdfs://quickstart.cloudera:8020/user/cloudera/inputfiles/twitter.avsc');
-
-
-2.    
-LOAD  DATA LOCAL INPATH  '/home/dbtrain/<<urname>>/twitter.avro' OVERWRITE INTO TABLE twitavrotbl;
-
-3.
-DESCRIBE twitavrotbl;
-DESCRIBE formatted twitavrotbl;
-
-SELECT * FROM twitavrotbl;
