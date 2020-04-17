@@ -1,0 +1,83 @@
+
+Home directory of HDFS is always /user/username
+so it is /user/dbtrain/
+
+
+Help for all hadoop commands
+-------------------------------
+hadoop fs -help
+hadoop fs -help ls
+
+
+To get Hadoop version
+---------------------
+hadoop version
+
+
+To list all the hadoop file system commands
+-------------------------------------------
+hadoop fs
+
+
+To see all the files in a current directory
+---------------------------------------------
+hadoop fs -ls
+
+To create a directory in 
+---------------------------------------
+hadoop fs -mkdir /user/dbtrain/<<yourname>>/
+
+
+To delete a directory
+---------------------
+hadoop fs -rm -r /user/dbtrain/<<yourname>>/
+
+
+To come out of a directory
+---------------------------
+cd ..
+
+
+To copy a file from Linux into HDFS . Use either put command or copyFromLocal
+-------------------------------------------------------------------------------
+create files a.txt and b.txt in Linux 
+
+hadoop fs -put a.txt /user/dbtrain/<<yourname>>/
+
+hadoop fs -copyFromLocal b.txt /user/dbtrain/<<yourname>>/
+
+To display the data in the file
+-------------------------------
+hadoop fs -cat /user/dbtrain/<yourname>/a.txt
+
+
+To copy a file from hdfs to Linux. Use either copyToLocal or get command
+-------------------------------
+rm a.txt 
+
+hadoop fs -copyToLocal /user/dbtrain/<<yourname>>/a.txt /home/dbtrain/<<yourname>>/a.txt
+
+hadoop fs -get /user/dbtrain/<username>/a.txt /home/dbtrain/<<yourname>>
+
+
+To remove the entire directory
+------------------------------
+hadoop fs -rm -r /user/dbtrain/<<yourname>>/
+
+
+To get the amount of space used and available on filesystem
+-----------------------------------------------------------
+hadoop fs -df hdfs:/
+
+
+To count the number of directories,files and bytes
+-------------------------------------------------
+hadoop fs -count hdfs:/
+
+
+Ctrl C - To break a process
+Exit - Exit from cloudera VM
+
+To see all the commands we executed in VM
+-------------------------------------------
+History
