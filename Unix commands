@@ -1,0 +1,35 @@
+To list the files in VM
+-----------------------
+ls
+
+
+To create a directory
+------------------------
+mkdir input
+
+
+To see the content of a file
+----------------------------
+cat a.txt
+
+
+To come out of a directory
+--------------------------
+cd ..
+
+
+To exit
+-------
+exit
+
+
+VI Editor
+----------
+vi editor posts.txt
+
+type somethings by pressing i in the keyboard
+
+:w - save the file
+:q - quit
+:wq - save and quit
+:q! - quit without saving
