@@ -1,0 +1,64 @@
+1. Do the following 4 tasks for the sample data :
+
+a. Create table and load HDFS data
+b. Create table and load local data
+c. Create external table and load HDFS data
+d. Create external table and load local data
+
+Use any sample file that was shared and do the above tasks and observe how the table and the file underneath behave.
+
+2.
+---------
+Partition
+----------
+
+CREATE TABLE postspart (user STRING, post STRING, time BIGINT)
+PARTITIONED BY (country STRING)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+STORED AS TEXTFILE;
+
+show partitions postspart;
+
+! hadoop fs -ls /user/hive/warehouse/postspart;
+
+
+
+LOAD DATA LOCAL INPATH '/home/dbtrain/<<urname>>/posts_us.txt'
+OVERWRITE INTO TABLE postspart PARTITION (country='US');
+
+
+show partitions postspart;
+! hadoop fs -ls /user/hive/warehouse/postspart;
+! hadoop fs -ls /user/hive/warehouse/postspart/country=US
+
+
+LOAD DATA LOCAL INPATH '/home/dbtrain/<<urname>>/posts_us.txt'
+OVERWRITE INTO TABLE postspart PARTITION (country='AUSTRALIA');
+
+
+show partitions postspart;
+! hadoop fs -ls /user/hive/warehouse/postspart;
+
+
+select * from postspart where country='US';
+
+select * from postspart where country='AUSTRALIA';
+
+Dynamic partition
+--------------------
+
+insert into table postspart partition(country) select name,address,country from posts;
+
+set hive.exec.dynamic.partition=true;
+ser hive.exec.dynamic.partition.mode=nonstrict;
+
+
+
+To drop a partiton
+------------------
+ALTER TABLE postspart DROP IF EXISTS PARTITION(country='US') ;
+
+! hadoop fs -ls /user/hive/warehouse/postspart;
+Folder will not be there
+
