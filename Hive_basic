@@ -44,7 +44,7 @@ General Table and HDFS File
 ------------------------------
 
 1.
-Hive> CREATE TABLE posts (user STRING, post STRING, time BIGINT)
+Hive> CREATE TABLE posts (userid STRING, post STRING, time BIGINT)
 ROW FORMAT DELIMITED
 FIELDS TERMINATED BY ','
 STORED AS TEXTFILE;
