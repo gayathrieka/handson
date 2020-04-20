@@ -13,7 +13,7 @@ Use any sample file that was shared and do the above tasks and observe how the t
 Partition
 ----------
 
-CREATE TABLE postspart (user STRING, post STRING, time BIGINT)
+CREATE TABLE postspart (userid STRING, post STRING, time BIGINT)
 PARTITIONED BY (country STRING)
 ROW FORMAT DELIMITED
 FIELDS TERMINATED BY ','
