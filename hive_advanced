@@ -9,15 +9,139 @@ FIELDS TERMINATED BY '\t'
 STORED AS TEXTFILE;
 
 2.    
-LOAD  DATA LOCAL INPATH  '/home/dbtrain/<<urname>>/TwitterData.txt' OVERWRITE INTO TABLE twittble;
+LOAD  DATA LOCAL INPATH  '/home/cloudera/inputfiles/TwitterData.txt' OVERWRITE INTO TABLE twittble;
 
 3.
 SELECT * FROM twittble;
 ! hadoop fs -ls /user/hive/warehouse/twittble;
 
 
+B. Create a partition table:
+-----------------------------
+1.
+DROP TABLE twitpart;
 
-B. Create table and load as ORC file
+CREATE TABLE twitpart(tweetId BIGINT, username STRING, txt STRING,favc BIGINT,retweet STRING,retcount BIGINT,followerscount BIGINT) 
+PARTITIONED BY(profileLocation STRING) 
+ROW FORMAT DELIMITED FIELDS 
+TERMINATED BY '\t' STORED AS TEXTFILE;
+
+2.
+INSERT OVERWRITE TABLE twitpart PARTITION (profileLocation="Chicago") 
+SELECT tweetId,username,txt,favc,retweet,retcount,followerscount 
+FROM twittble
+WHERE profileLocation like '%Chicago%';
+
+3.
+select * from twitpart;
+! hadoop fs -ls /user/hive/warehouse/twitpart;
+! hadoop fs -ls /user/hive/warehouse/twitpart/profilelocation=Chicago;
+! hadoop fs -cat /user/hive/warehouse/twitpart/profilelocation=Chicago/000000_0;
+
+
+C. Create a dynamic partition table:
+-------------------------------------
+1.
+DROP TABLE twitdynpart;
+
+SET hive.exec.dynamic.partition.mode=nonstrict;
+SET hive.exec.dynamic.partition=true;
+
+CREATE TABLE twitdynpart(tweetId BIGINT,txt STRING,followerscount BIGINT) 
+PARTITIONED BY(username STRING) 
+ROW FORMAT DELIMITED FIELDS 
+TERMINATED BY '\t' STORED AS TEXTFILE;
+
+2.
+INSERT OVERWRITE TABLE twitdynpart PARTITION (username) 
+SELECT tweetId,txt,followerscount,username
+FROM twittble
+WHERE tweetId is not null;
+
+3.
+select * from twitdynpart;
+
+show partitions twitdynpart;
+
+! hadoop fs -ls /user/hive/warehouse/twitdynpart;
+! hadoop fs -ls /user/hive/warehouse/twitdynpart/username=YoursTruly_Myy;
+! hadoop fs -cat /user/hive/warehouse/twitdynpart/username=YoursTruly_Myy/000000_0;
+Partitions for other usernames also created
+
+
+D. Create a bucket table:
+-------------------------
+1.
+DROP TABLE bucktbl;
+
+CREATE TABLE bucktbl(tweetId BIGINT, username STRING,txt STRING,CreatedAt STRING,favc BIGINT,retweet STRING,retcount BIGINT, followerscount BIGINT)
+PARTITIONED BY( profileLocation STRING)
+CLUSTERED BY(tweetId) INTO 2 BUCKETS
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY '\t'
+STORED AS TEXTFILE;
+
+2.
+set hive.enforce.bucketing = true; 
+INSERT OVERWRITE TABLE bucktbl PARTITION (profileLocation="Chicago")    
+SELECT tweetId,username,txt,CreatedAt,favc,retweet,retcount,followerscount       
+FROM twittble
+where profileLocation like '%Chicago%';
+
+3.
+SELECT * FROM bucktbl;
+
+! hadoop fs -ls /user/hive/warehouse/bucktbl;
+! hadoop fs -ls /user/hive/warehouse/bucktbl/profilelocation=Chicago;
+! hadoop fs -cat /user/hive/warehouse/bucktbl/profilelocation=Chicago/000000_0;
+! hadoop fs -cat /user/hive/warehouse/bucktbl/profilelocation=Chicago/000001_0;
+
+
+describe formatted twitpart;
+describe formatted bucktbl;
+describe extended bucktbl;
+
+
+E. Create a Skew Table:
+-----------------------
+1.
+SELECT * FROM twittble;
+
+2.
+set hive.mapred.supports.subdirectories=true;
+set mapred.input.dir.recursive=true;
+
+DROP TABLE twitskew;
+
+CREATE TABLE  twitskew (tweetId BIGINT, username STRING,txt STRING,followerscount BIGINT)
+SKEWED BY (tweetId) on (459917353988284416, 459917352285401088) 
+STORED as DIRECTORIES;
+
+3.
+INSERT OVERWRITE TABLE twitskew     
+SELECT tweetId,username,txt,followerscount       
+FROM twittble
+WHERE tweetId is not null;
+
+
+4.
+SELECT * FROM twitskew;
+All the records will be displayed
+
+! hadoop fs -ls /user/hive/warehouse/twitskew;
+! hadoop fs -ls /user/hive/warehouse/twitskew/tweetid=459917353988284416;
+! hadoop fs -ls /user/hive/warehouse/twitskew/tweetid=459917352285401088;
+! hadoop fs -ls /user/hive/warehouse/twitskew/HIVE_DEFAULT_LIST_BUCKETING_DIR_NAME
+
+sudo -i
+hadoop fs -cat /user/hive/warehouse/twitskew/tweetid=459917353988284416/000000_0
+hadoop fs -cat /user/hive/warehouse/twitskew/tweetid=459917352285401088/000000_0
+hadoop fs -cat /user/hive/warehouse/twitskew/HIVE_DEFAULT_LIST_BUCKETING_DIR_NAME/000000_0
+
+describe formatted twitskew;
+
+
+F. Create table and load as ORC file
 -------------------------------------
 Optimized Row Columnar (ORC) File format is used as it further compresses data files. It could result in a small performance loss in writing, but there will be huge performance gain in reading.
 
@@ -38,3 +162,50 @@ SELECT * FROM twitorctbl;
 ! hadoop fs -tail /user/hive/warehouse/twitorctbl/000000_0;
 
 
+G. Hive on TEZ:
+---------------
+cat /etc/hive/conf/hive-site.xml
+
+
+SELECT * FROM twittble;
+
+set hive.execution.engine=tez;
+
+SELECT * FROM twittble;
+
+set hive.execution.engine=mr;
+
+
+H. Vectorization:
+------------------
+
+SELECT * FROM twitorctbl;
+
+set hive.vectorized.execution.enabled=true;
+
+SELECT * FROM twitorctbl;
+
+
+I.Explain:
+----------
+EXPLAIN SELECT profilelocation, count(tweetid) FROM twitorctbl group by profilelocation;
+
+
+J. Indexes:
+-----------
+
+SELECT AVG(followerscount) from twittble;
+Time taken: 60.175 secs
+
+CREATE INDEX tweetid_ind
+ON TABLE twittble(tweetId)
+AS 'org.apache.hadoop.hive.ql.index.compact.CompactIndexHandler'
+WITH DEFERRED REBUILD;
+
+ALTER INDEX tweetid_ind on twittble REBUILD;
+
+See the index available on a table:
+show formatted index on twittble;
+
+SELECT AVG(followerscount) from twittble;
+Time taken: 41.331 secs
