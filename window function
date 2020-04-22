@@ -1,0 +1,33 @@
+create table stocks (stockid String, date String, Open Double, High Double, Low Double, Close Double, Volume_for_the_day int) row format delimited fields terminated by ',';
+
+load data local inpath '/home/dbtrain/<<username>>/stock.csv' into table stocks;
+
+Lag:
+
+This function returns the values of the previous row. You can specify an integer offset which designates the row position else it will take the default integer offset as 1.
+
+select stockid,date,close,lag(close,1) over(partition by stockid) as yesterday_price from stocks
+
+Lead :
+
+This function returns the values from the following rows. You can specify an integer offset which designates the row position else it will take the default integer offset as 1.
+
+select stockid,date,close,case(lead(close,1) over(partition by stockid)-close)>0 when true then "higher" when false then "lesser" end as Changes from stocks;
+
+FIRST_VALUE
+
+It returns the value of the first row from that window. 
+
+select stockid,first_value(high) over(partition by stockid) as first_high from stocks;
+
+RANK:
+Rank
+The rank function will return the rank of the values as per the result set of the over clause. If two values are same then it will give the same rank to those 2 values and then for the next value, the sub-sequent rank will be skipped. The below query will rank the closing prices of the stock for each ticker. The same you can see in the below screenshot. 
+select stockid,close,rank() over(partition by stockid order by close) as closing from stocks;
+
+Dense_rank
+It is same as the rank() function but the difference is if any duplicate value is present then the rank will not be skipped for the subsequent rows. Each unique value will get the ranks in a sequence. The below query will rank the closing prices of the stock for each ticker. The same you can see in the below screenshot.
+select stockid,close,dense_rank() over(partition by stockid order by close) as closing from stocks ;
+
+Check for Rownumber(),LASTVALUE()
+ 
