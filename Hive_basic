@@ -61,14 +61,14 @@ Hive> describe posts;
 
 
 4.
-hadoop fs -put /home/dbtrain/<<yourname>>/posts.txt /user/dbtrain/<<urname>>/posts.txt
-! hadoop fs -ls /user/dbtrain/<<urname>>/;
+hadoop fs -put /home/dbtrain/<<yourname>>/posts.txt adl://hadoopfocus.azuredatalakestore.net/clusters/focus/<<urname>>/
+! hadoop fs -ls adl://hadoopfocus.azuredatalakestore.net/clusters/focus/<<urname>>/;
 
-Hive> LOAD DATA INPATH '/user/dbtrain/<<urname>>/posts.txt'
+Hive> LOAD DATA INPATH 'adl://hadoopfocus.azuredatalakestore.net/clusters/focus/<<urname>>/posts.txt'
 OVERWRITE INTO TABLE posts;
 
 
-! hadoop fs - ls /hive/warehouse/posts;
+! hadoop fs - ls /user/hive/warehouse/posts;
 
 
 5.
