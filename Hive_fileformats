@@ -1,0 +1,96 @@
+A. Create table and load as text file
+-------------------------------------
+1.
+DROP TABLE twittble;
+
+CREATE TABLE twittble(tweetId BIGINT, username STRING,txt STRING, CreatedAt STRING,     profileLocation STRING,favc BIGINT,retweet STRING,retcount BIGINT,followerscount BIGINT)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY '\t'
+STORED AS TEXTFILE;
+
+2.    
+LOAD  DATA LOCAL INPATH  '/home/cloudera/inputfiles/TwitterData.txt' OVERWRITE INTO TABLE twittble;
+
+3.
+SELECT * FROM twittble;
+! hadoop fs -ls /user/hive/warehouse/twittble;
+
+
+
+B. Create table and load as ORC file
+-------------------------------------
+Optimized Row Columnar (ORC) File format is used as it further compresses data files. It could result in a small performance loss in writing, but there will be huge performance gain in reading.
+
+1.
+DROP TABLE twitorctbl;
+
+CREATE TABLE twitorctbl(tweetId BIGINT, username STRING,txt STRING, CreatedAt STRING, profileLocation STRING COMMENT 'Location of user',favc INT,retweet STRING,retcount INT,followerscount INT)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY 't'
+STORED AS ORC tblproperties ("orc.compress"="NONE");
+
+2.
+INSERT INTO TABLE twitorctbl SELECT * FROM twittble;
+
+3.
+SELECT * FROM twitorctbl;
+! hadoop fs -ls /hive/warehouse/twitorctbl;
+! hadoop fs -tail /hive/warehouse/twitorctbl/000000_0;
+
+
+C. Create a Avro Table:
+------------------------
+1.
+CREATE TABLE twitavrotbl
+ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.avro.AvroSerDe'
+STORED as INPUTFORMAT 'org.apache.hadoop.hive.ql.io.avro.AvroContainerInputFormat'
+OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.avro.AvroContainerOutputFormat'
+TBLPROPERTIES ('avro.schema.url'='hdfs://quickstart.cloudera:8020/user/cloudera/inputfiles/twitter.avsc');
+
+
+2.    
+LOAD  DATA LOCAL INPATH  '/home/cloudera/inputfiles/twitter.avro' OVERWRITE INTO TABLE twitavrotbl;
+
+3.
+DESCRIBE twitavrotbl;
+DESCRIBE formatted twitavrotbl;
+
+SELECT * FROM twitavrotbl;
+
+! hadoop fs -ls /hive/warehouse/twitavrotbl;
+! hadoop fs -cat /hive/warehouse/twitavrotbl/twitter.avro;
+
+4.
+To enable compression for Avro tables, use environment variables to enable Hive to use compression and to specify a codec:
+set hive.exec.compress.output=true;
+set avro.output.codec=snappy;
+
+
+D. Create a Parquet Table:
+--------------------------
+1. (Not in Hive)
+Print the first few records of parquet file to standard output from VM:
+parquet-tools head /home/cloudera/wiki_parquet/part-r-1.parquet
+
+Print the Parquet schema for the file:
+parquet-tools schema /home/cloudera/wiki_parquet/part-r-1.parquet
+
+Print the file footer metadata:
+parquet-tools meta /home/cloudera/wiki_parquet/part-r-1.parquet
+
+
+2.
+CREATE TABLE wikipar(id INT, title STRING, modified BIGINT, text STRING, username STRING)
+ROW FORMAT SERDE 'parquet.hive.serde.ParquetHiveSerDe'
+STORED AS INPUTFORMAT "parquet.hive.DeprecatedParquetInputFormat"
+OUTPUTFORMAT "parquet.hive.DeprecatedParquetOutputFormat";
+
+3.    
+LOAD  DATA LOCAL INPATH  '/home/cloudera/wiki_parquet/' OVERWRITE INTO TABLE wikipar;
+
+4.
+DESCRIBE wikipar;
+SELECT * FROM wikipar limit 10;
+
+! hadoop fs -ls /hive/warehouse/wikipar;
+! hadoop fs -tail /hive/warehouse/wikipar/part-r-1.parquet;
