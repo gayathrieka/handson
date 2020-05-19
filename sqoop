@@ -1,4 +1,4 @@
-sqoop import --connect jdbc:mysql://cloudazure.eastus2.cloudapp.azure.com:3306/mysql --table AIRPORTS  --username root --password hcluser --table TEST --target-dir 'adl://hadoopfocus.azuredatalakestore.net/clusters/focus1/gaya/test/' --m 1
+sqoop import --connect jdbc:mysql://cloudazure.eastus2.cloudapp.azure.com:3306/mysql --table AIRPORTS  --username root --password hcluser  --target-dir '/user/focus1/gaya/test/' --m 1
 
 sqoop list-tables --connect jdbc:mysql://cloudazure.eastus2.cloudapp.azure.com:3306/mysql  --username root --password hcluser
 
