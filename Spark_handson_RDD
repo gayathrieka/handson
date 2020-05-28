@@ -1,0 +1,21 @@
+val rdd = sc.parallelize(Array(1,2,3,4,5,6,7,8,9,10))
+print(rdd.getNumPartitions)
+set partition as two
+val rdd = sc.parallelize(Array(1,2,3,4,5,6,7,8,9,10),3)
+print(rdd.getNumPartitions)
+-----------------------------------------------------------------------
+
+val input = sc.textFile("README.md")
+val words = input.flatMap(x => x.split(" "))
+val wordmap = words.map(x => (x, 1))
+val counts = wordmap.reduceByKey(_ + _)
+counts.take(10).foreach(println)
+
+----------------------------------------------------------------------
+
+val x = sc.parallelize(Array(1, 2, 3), 2)
+val y = sc.parallelize(Array(3, 4), 1)
+val z = x.union(y)
+z.collect()
+-------------------------------------------------------------------------
+
