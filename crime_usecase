@@ -1,4 +1,21 @@
-Question 1: Find the no of crimes happen based on murder weapon
+Question 1: Find the no of crimes happen based on method
 Question 2: To get all the crimes related to robbery
 Question 3: To list the robberies happened in the day time
 Question 4: List all the offenses along with the no of occurrences
+
+import org.apache.spark._
+import org.apache.spark.{SparkConf, SparkContext}
+import org.apache.spark.sql.{DataFrame, SQLContext, SparkSession}
+import org.apache.spark.sql.types._  
+val schema_datatype = StructType(
+  StructField("CCN", IntegerType, true) :: 
+  StructField("RepDate", StringType, true) :: 
+  StructField("Shift", StringType, true) ::
+  StructField("Offense", StringType, true) ::
+  StructField("Method", StringType, true) :: Nil)
+val csv_df = spark.read.format("csv").option("header",true).schema(schema_datatype).load("/FileStore/tables/wash_dc_crime_incidents.csv")
+val csv_df_filter_method=csv_df.filter("Method='KNIFE'")
+csv_df_filter_method.show
+ csv_df.createOrReplaceTempView("crime")
+  val df2=spark.sql("select * from crime")
+df2.show()
