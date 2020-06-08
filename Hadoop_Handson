@@ -1,0 +1,102 @@
+
+Home directory of HDFS is always /user/username
+so it is /user/dbuser*
+
+
+Help for all hadoop commands
+-------------------------------
+hadoop fs -help
+hadoop fs -help ls
+
+
+To get Hadoop version
+---------------------
+hadoop version
+
+
+To list all the hadoop file system commands
+-------------------------------------------
+hadoop fs
+
+
+To see all the files in a root directory
+----------------------------------------
+hadoop fs -ls /
+
+
+To see all the files in a current directory
+---------------------------------------------
+hadoop fs -ls
+
+
+To see the content of a directory
+--------------------------------
+hadoop fs -ls /user/<username>
+
+
+To create a directory in /user/<username>
+---------------------------------------
+hadoop fs -mkdir inputfiles
+
+This inputfiles will be created in /user/<username>
+
+
+To delete a directory
+---------------------
+hadoop fs -rm -r inputfiles
+
+
+To come out of a directory
+---------------------------
+cd ..
+
+
+To place a file into HDFS
+-------------------------
+Touch a file in linux directory
+
+hadoop fs -put a.txt /user/<username>/inputfiles/a.txt
+
+hadoop fs -copyFromLocal b.txt /user/<username>
+
+
+To display the data in the file
+-------------------------------
+hadoop fs -cat /user/<username>/inputfiles/a.txt
+
+
+To copy a file from hdfs to VM
+-------------------------------
+rm a.txt 
+
+hadoop fs -copyToLocal /home/<username> a.txt
+
+hadoop fs -get /user/<username>/inputfiles/a.txt /home/<username>
+
+
+To remove the entire directory
+------------------------------
+hadoop fs -rm -r inputfiles
+
+
+To get the amount of space used and available on filesystem
+-----------------------------------------------------------
+hadoop fs -df hdfs:/
+
+
+To count the number of directories,files and bytes
+-------------------------------------------------
+hadoop fs -count hdfs:/
+
+
+Ctrl C - To break a process
+Exit - Exit from cloudera VM
+
+To see all the commands we executed in VM
+-------------------------------------------
+History
+
+
+
+
+
