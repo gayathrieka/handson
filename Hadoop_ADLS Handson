@@ -25,12 +25,12 @@ hadoop fs -ls
 
 To create a directory in 
 ---------------------------------------
-hadoop fs -mkdir adl://hadoopfocus.azuredatalakestore.net/clusters/focus/<<urname>>
+hadoop fs -mkdir adl://hadoopfocus.azuredatalakestore.net/clusters/focus3/<<urname>>
 
 
 To delete a directory
 ---------------------
-hadoop fs -rm -r adl://hadoopfocus.azuredatalakestore.net/clusters/focus/<<urname>>
+hadoop fs -rm -r adl://hadoopfocus.azuredatalakestore.net/clusters/focus3/<<urname>>
 
 
 To come out of a directory
@@ -42,27 +42,27 @@ To copy a file from Linux into HDFS . Use either put command or copyFromLocal
 -------------------------------------------------------------------------------
 create files a.txt and b.txt in Linux 
 
-hadoop fs -put a.txt adl://hadoopfocus.azuredatalakestore.net/clusters/focus/<<urname>>
+hadoop fs -put a.txt adl://hadoopfocus.azuredatalakestore.net/clusters/focus3/<<urname>>
 
-hadoop fs -copyFromLocal b.txt adl://hadoopfocus.azuredatalakestore.net/clusters/focus/<<urname>>
+hadoop fs -copyFromLocal b.txt adl://hadoopfocus.azuredatalakestore.net/clusters/focus3/<<urname>>
 
 To display the data in the file
 -------------------------------
-hadoop fs -cat adl://hadoopfocus.azuredatalakestore.net/clusters/focus/<<urname>>
+hadoop fs -cat adl://hadoopfocus.azuredatalakestore.net/clusters/focus3/<<urname>>
 
 
 To copy a file from hdfs to Linux. Use either copyToLocal or get command
 -------------------------------
 rm a.txt 
 
-hadoop fs -copyToLocal adl://hadoopfocus.azuredatalakestore.net/clusters/focus/<<urname>>/a.txt /home/focus/<<yourname>>/a.txt
+hadoop fs -copyToLocal adl://hadoopfocus.azuredatalakestore.net/clusters/focus3/<<urname>>/a.txt /home/focus/<<yourname>>/a.txt
 
-hadoop fs -get adl://hadoopfocus.azuredatalakestore.net/clusters/focus/<<urname>>/a.txt /home/focus/<<yourname>>
+hadoop fs -get adl://hadoopfocus.azuredatalakestore.net/clusters/focus3/<<urname>>/a.txt /home/focus/<<yourname>>
 
 
 To remove the entire directory
 ------------------------------
-hadoop fs -rm -r adl://hadoopfocus.azuredatalakestore.net/clusters/focus/<<urname>>/
+hadoop fs -rm -r adl://hadoopfocus.azuredatalakestore.net/clusters/focus3/<<urname>>/
 
 
 To get the amount of space used and available on filesystem
