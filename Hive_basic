@@ -67,6 +67,8 @@ hadoop fs -put /home/dbtrain/<<yourname>>/posts.txt adl://hadoopfocus.azuredatal
 Hive> LOAD DATA INPATH 'adl://hadoopfocus.azuredatalakestore.net/clusters/focus/<<urname>>/posts.txt'
 OVERWRITE INTO TABLE posts;
 
+******************Hive> LOAD DATA INPATH '/user/cititrain/<<urname>>/posts.txt'
+OVERWRITE INTO TABLE posts;******************************
 
 ! hadoop fs - ls /user/hive/warehouse/posts;
 
