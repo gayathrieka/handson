@@ -34,7 +34,7 @@ show partitions postspart;
 ! hadoop fs -ls /user/hive/warehouse/postspart/country=US
 
 
-LOAD DATA LOCAL INPATH '/home/dbtrain/<<urname>>/posts_us.txt'
+LOAD DATA LOCAL INPATH '/home/dbtrain/<<urname>>/posts_aus.txt'
 OVERWRITE INTO TABLE postspart PARTITION (country='AUSTRALIA');
 
 
