@@ -1,0 +1,25 @@
+set hive.enforce.bucketing=true;
+ set hive.exec.dynamic.partition.mode=nonstrict;
+set hive.txn.manager=org.apache.hadoop.hive.ql.lockmgr.DbTxnManager;
+ set hive.compactor.initiator.on=true;
+ set hive.compactor.worker.threads=1;
+set hive.support.concurrency=true;
+
+
+CREATE TABLE merge_data( ID int, TranValue string, last_update_user string) PARTITIONED BY (tran_date string) CLUSTERED BY (ID) into 5 buckets STORED AS ORC TBLPROPERTIES ('transactional'='true');
+
+CREATE TABLE merge_source( ID int, TranValue string, tran_date string) STORED AS ORC; 
+
+INSERT INTO merge_data PARTITION (tran_date) VALUES (1, 'value_01', 'creation', '20170410'), (2, 'value_02', 'creation', '20170410'), (3, 'value_03', 'creation', '20170410'), (4, 'value_04', 'creation', '20170410'), (5, 'value_05', 'creation', '20170413'), (6, 'value_06', 'creation', '20170413'), (7, 'value_07', 'creation', '20170413'), (8, 'value_08', 'creation', '20170413'), (9, 'value_09', 'creation', '20170413'), (10, 'value_10','creation', '20170413'); 
+
+INSERT INTO merge_source VALUES (1, 'value_01', '20170410'), (4, NULL, '20170410'), (7, 'value_77777', '20170413'), (8, NULL, '20170413'), (8, 'value_08', '20170415'), (11, 'value_11', '20170415');
+
+set hive.auto.convert.join=false;
+
+MERGE INTO merge_data AS T 
+USING merge_source AS S
+ON T.ID = S.ID and T.tran_date = S.tran_date
+WHEN MATCHED AND (T.TranValue != S.TranValue AND S.TranValue IS NOT NULL) THEN UPDATE SET TranValue = S.TranValue, last_update_user = 'merge_update'
+WHEN MATCHED AND S.TranValue IS NULL THEN DELETE
+WHEN NOT MATCHED THEN INSERT VALUES (S.ID, S.TranValue, 'merge_insert', S.tran_date);
+
