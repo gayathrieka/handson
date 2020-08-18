@@ -31,7 +31,7 @@ hadoop fs -ls
 
 To see the content of a directory
 --------------------------------
-hadoop fs -ls /user/<username>
+hadoop fs -ls /user/focus4/
 
 
 To create a directory in /user/<username>
