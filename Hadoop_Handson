@@ -1,6 +1,6 @@
 
 Home directory of HDFS is always /user/username
-so it is /user/dbuser*
+so it is /user/focus4
 
 
 Help for all hadoop commands
@@ -36,14 +36,14 @@ hadoop fs -ls /user/<username>
 
 To create a directory in /user/<username>
 ---------------------------------------
-hadoop fs -mkdir inputfiles
+hadoop fs -mkdir urname
 
-This inputfiles will be created in /user/<username>
+This inputfiles will be created in /user/focus4
 
 
 To delete a directory
 ---------------------
-hadoop fs -rm -r inputfiles
+hadoop fs -rm -r /user/focus4/urname/
 
 
 To come out of a directory
@@ -55,28 +55,28 @@ To place a file into HDFS
 -------------------------
 Touch a file in linux directory
 
-hadoop fs -put a.txt /user/<username>/inputfiles/a.txt
+hadoop fs -put a.txt /user/focus4/urname/inputfiles/a.txt
 
-hadoop fs -copyFromLocal b.txt /user/<username>
+hadoop fs -copyFromLocal b.txt /user/focus4/urname/
 
 
 To display the data in the file
 -------------------------------
-hadoop fs -cat /user/<username>/inputfiles/a.txt
+hadoop fs -cat /user/focus4/urname/inputfiles/a.txt
 
 
 To copy a file from hdfs to VM
 -------------------------------
 rm a.txt 
 
-hadoop fs -copyToLocal /home/<username> a.txt
+hadoop fs -copyToLocal /home/urname a.txt
 
-hadoop fs -get /user/<username>/inputfiles/a.txt /home/<username>
+hadoop fs -get /user/focus4/urname/inputfiles/a.txt /home/urname
 
 
 To remove the entire directory
 ------------------------------
-hadoop fs -rm -r inputfiles
+hadoop fs -rm -r /user/focus4/urname/inputfiles/
 
 
 To get the amount of space used and available on filesystem
