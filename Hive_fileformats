@@ -26,7 +26,7 @@ DROP TABLE twitorctbl;
 
 CREATE TABLE twitorctbl(tweetId BIGINT, username STRING,txt STRING, CreatedAt STRING, profileLocation STRING COMMENT 'Location of user',favc INT,retweet STRING,retcount INT,followerscount INT)
 ROW FORMAT DELIMITED
-FIELDS TERMINATED BY 't'
+FIELDS TERMINATED BY '\t'
 STORED AS ORC tblproperties ("orc.compress"="NONE");
 
 2.
