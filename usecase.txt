@@ -1,0 +1,30 @@
+Write a Spark program to do the following. Save each result in a parquet file .
+
+a)Get all employee details from Research and Operations  department 
+b)Get all employee details who was born in 1980
+c)Get the details of Managers belonging to Sales
+d) Display the number of partitions for this dataframe
+e)Create a new table of employee for each department . Use repartition or coalesce while saving to a new table.
+f) Find the top 3 largest salary of the employees belonging to Sales department
+g) Increment the salary of all the employees to 5% and update it. -- Use withColumn
+
+Department schema:
+--------------------
+ DEPT_ID integer not null,
+ DEPT_NAME varchar(255) not null,
+ DEPT_NO varchar(20) not null,
+ LOCATION varchar(255)
+
+Employee schema:
+--------------------
+ EMP_ID bigint not null,
+ EMP_NAME varchar(50) not null,
+ EMP_NO varchar(20) not null,
+ HIRE_DATE date not null,
+ IMAGE longblob,
+   JOB varchar(30) not null,
+   SALARY float not null,
+   DEPT_ID integer not null,
+   MNG_ID bigint
+
+
