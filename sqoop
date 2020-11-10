@@ -10,7 +10,7 @@ sqoop create-hive-table  --connect jdbc:mysql://cloudazure1.eastus2.cloudapp.azu
 
 sqoop import --connect jdbc:mysql://cloudazure1.eastus2.cloudapp.azure.com:3306/mysql  --username root --password hcluser --table AIRPORTS --hive-import --m 1
 
-sqoop import --connect jdbc:mysql://cloudazure1.eastus2.cloudapp.azure.com:3306/mysql  --username root --password hcluser --table AIRPORTS --query "select * from AIRPORTS where c1=1" --hive-import --hive-table gaya.AIRPORTS   --m 1
+sqoop import --connect jdbc:mysql://cloudazure1.eastus2.cloudapp.azure.com:3306/mysql  --username root --password hcluser --table AIRPORTS --hive-import --hive-table gaya.AIRPORTS   --m 1
 
 sqoop export --connect jdbc:mysql://cloudazure1.eastus2.cloudapp.azure.com:3306/mysql  --username root --password hcluser --table AIRPORTS --export-dir /hive/warehouse/test/country=india/ --input-fields-terminated-by "\t"
 
