@@ -101,6 +101,12 @@ describe formatted twitpart;
 describe formatted bucktbl;
 describe extended bucktbl;
 
+Create Sampling using Bucket
+-----------------------------:
+
+SELECT *
+FROM table_name TABLESAMPLE (BUCKET x OUT OF y [ON colname]) s;
+
 
 E. Create a Skew Table:
 -----------------------
