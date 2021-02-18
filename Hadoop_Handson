@@ -51,7 +51,7 @@ To come out of a directory
 cd ..
 
 
-To place a file into HDFS
+To place a file from Linux into HDFS
 -------------------------
 Touch a file in linux directory
 
@@ -65,7 +65,7 @@ To display the data in the file
 hadoop fs -cat /user/focus4/urname/inputfiles/a.txt
 
 
-To copy a file from hdfs to VM
+To copy a file from hdfs to Linux
 -------------------------------
 rm a.txt 
 
