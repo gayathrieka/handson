@@ -30,6 +30,8 @@ use databasename;
 
 Ex: use amol;
 
+Check which Database is in use :
+set hiveconf:hive.cli.print.current.db=true;
 
 To execute hql file from hadoop shell
 -------------------------------------
