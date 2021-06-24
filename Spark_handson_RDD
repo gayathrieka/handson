@@ -19,3 +19,31 @@ val z = x.union(y)
 z.collect()
 -------------------------------------------------------------------------
 
+ val baseRDD = sc.textFile("/user/root/wash_dc_crime_incidents.csv")
+ /FileStore/tables
+ baseRDD.take(3)
+ 
+ To remove header , use filter
+ 
+ val noHeaderRDD = baseRDD.filter { line => ! (line contains "REPORTDATETIME") }
+ 
+ noHeaderRDD.take(3)
+ 
+ case class CrimeData(ccn: String,reportTime: String,shift: String,offense: String,method: String)
+ 
+ Here first we have split comma separated data and mapped it to correct columns using Scala case class CrimeData
+
+
+val dataRDD = noHeaderRDD.map(x=>x.split(",")).map(x=>CrimeData(x(0).toString, x(1).toString, x(2).toString, x(3).toString, x(4).toString)).toDF
+dataRDD.take(3)
+ dataRDD.take(3).foreach(println)
+ 
+ Find the no of crimes happen based on murder weapon
+
+ val wepRDD=dataRDD.map(x=>(x.method,1)). reduceByKey(_+_)
+ wepRDD.take(5).foreach(println)
+ 
+  val robRDD=dataRDD.join(x=>(x.offense=="ROBBERY")).filter()
+   robRDD.take(10).foreach(println)
+
+robRDD.count()
