@@ -1,0 +1,32 @@
+import org.apache.spark._
+import org.apache.spark.{SparkConf, SparkContext}
+import org.apache.spark.sql.{DataFrame, SQLContext, SparkSession}
+
+
+object spark_json {
+  def main(args: Array[String]) {
+    val spark = SparkSession.builder().master("yarn").appName("JSON").getOrCreate()
+    val json_df = spark.read.json("/user/root/people.json")
+    json_df.printSchema()
+    val df_filter = json_df.filter("age>30")
+    spark.sql("create database if not exists hadoop")
+    df_filter.write.mode("overwrite").saveAsTable("hadoop.test1")
+
+  }
+}
+
+
+
+
+build.sbt:
+
+name := "spark_json"
+
+version := "0.1"
+
+scalaVersion := "2.11.7"
+
+libraryDependencies += "org.apache.spark" %% "spark-core" % "2.3.0"
+libraryDependencies +="org.apache.spark" %% "spark-sql" % "2.3.0"
+libraryDependencies += "org.apache.spark" % "spark-streaming_2.11" % "2.3.0"
+libraryDependencies += "org.apache.spark" %% "spark-hive" % "2.3.0" 
