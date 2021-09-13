@@ -1,6 +1,6 @@
 To enter into Hive Shell
 -------------------------
-hive
+/usr/bin/hive 
 
 
 To use shell commands inside hive
@@ -32,6 +32,7 @@ Ex: use amol;
 
 Check which Database is in use :
 set hiveconf:hive.cli.print.current.db=true;
+ --showDbInPrompt=true
 
 To execute hql file from hadoop shell
 -------------------------------------
@@ -46,7 +47,7 @@ General Table and HDFS File
 ------------------------------
 
 1.
-Hive> CREATE TABLE posts (userid STRING, post STRING, time BIGINT)
+Hive> CREATE TABLE posts (userid STRING, post STRING, timing BIGINT)
 ROW FORMAT DELIMITED
 FIELDS TERMINATED BY ','
 STORED AS TEXTFILE;
@@ -126,7 +127,7 @@ OVERWRITE INTO TABLE likes;
 
 
 
-CREATE EXTERNAL TABLE posts (user STRING, post STRING, time BIGINT)
+CREATE EXTERNAL TABLE posts (user STRING, post STRING, timing BIGINT)
 ROW FORMAT DELIMITED
 FIELDS TERMINATED BY ','
 STORED AS TEXTFILE;
